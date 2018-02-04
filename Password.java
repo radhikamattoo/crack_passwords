@@ -18,7 +18,6 @@ public class Password {
   String hashed;
   String plainText;
 
-
   public Password(String username, byte[] salt, int iterations, String hashed){
     this.username = username;
     this.salt = salt;
@@ -304,4 +303,5 @@ public class Password {
       System.out.println("IO Exception");
     }
   } // main
+
 }
