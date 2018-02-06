@@ -62,18 +62,17 @@ public class Password {
     final int iterations = 1;
     final int keyLength = 256;
     for(Password p : passwords){
-      if(p.plainText != null) continue; // Already cracked it!
+      if(p.getPlainText() != null) continue; // Already cracked it!
       for(String guess: guesses){
         char[] guess_char = guess.toCharArray();
-        String encoded = Base64.getEncoder().encodeToString(hashPassword(guess_char, p.salt, iterations, keyLength));
-        if(p.hashed.equals(encoded)){
-          System.out.println("CRACKED PASSWORD FOR " + p.username);
+        String encoded = Base64.getEncoder().encodeToString(hashPassword(guess_char, p.getSalt(), iterations, keyLength));
+        if(p.getHashed().equals(encoded)){
+          System.out.println("CRACKED PASSWORD FOR " + p.getUsername());
           System.out.println("Password:" + guess);
           System.out.println("Password length: " + guess.length());
-          System.out.println("Original encryption: " + p.hashed);
+          System.out.println("Original encryption: " + p.getHashed());
           System.out.println("Guess encryption: " + encoded );
-          System.out.println();
-          p.plainText = guess;
+          p.setPlainText(guess);
           break;
         }
       } // Guess for
@@ -94,54 +93,54 @@ public class Password {
     String reverse = guesses.get(1);
     String no_vowels = guesses.get(2);
 
-    for(int i = 0; i < numbers.length; i++){
-      for(int j = 0; j < numbers.length; j++){
-        for(int a = 0; a < numbers.length; a++){
-          for(int b = 0; b < numbers.length; b++){
-            String number_1 = Integer.toString(numbers[i]);
-            String number_2 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]);
-            String number_3 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]);
-            String number_4 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]) + Integer.toString(numbers[b]);
-
-            guesses.add(original + number_1);
-            guesses.add(original + number_2);
-            guesses.add(original + number_3);
-            guesses.add(original + number_4);
-
-            guesses.add(reverse + number_1);
-            guesses.add(reverse + number_2);
-            guesses.add(reverse + number_3);
-            guesses.add(reverse + number_4);
-
-            guesses.add(no_vowels + number_1);
-            guesses.add(no_vowels + number_2);
-            guesses.add(no_vowels + number_3);
-            guesses.add(no_vowels + number_4);
-
-            guesses.add(number_1 + original);
-            guesses.add(number_2 + original);
-            guesses.add(number_3 + original);
-            guesses.add(number_4 + original);
-
-            guesses.add(number_1 + reverse);
-            guesses.add(number_2 + reverse);
-            guesses.add(number_3 + reverse);
-            guesses.add(number_4 + reverse);
-
-            guesses.add(number_1 + no_vowels);
-            guesses.add(number_2 + no_vowels);
-            guesses.add(number_3 + no_vowels);
-            guesses.add(number_4 + no_vowels);
-            // String original_num = original + number;
-            // String reverse_num = reverse + number;
-            // String no_vowels_num = no_vowels + number;
-            // guesses.add(original_num);
-            // guesses.add(reverse_num);
-            // guesses.add(no_vowels_num);
-          }
-        }
-      }
-    }
+    // for(int i = 0; i < numbers.length; i++){
+    //   for(int j = 0; j < numbers.length; j++){
+    //     for(int a = 0; a < numbers.length; a++){
+    //       for(int b = 0; b < numbers.length; b++){
+    //         String number_1 = Integer.toString(numbers[i]);
+    //         String number_2 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]);
+    //         String number_3 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]);
+    //         String number_4 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]) + Integer.toString(numbers[b]);
+    //
+    //         guesses.add(original + number_1);
+    //         guesses.add(original + number_2);
+    //         guesses.add(original + number_3);
+    //         guesses.add(original + number_4);
+    //
+    //         guesses.add(reverse + number_1);
+    //         guesses.add(reverse + number_2);
+    //         guesses.add(reverse + number_3);
+    //         guesses.add(reverse + number_4);
+    //
+    //         guesses.add(no_vowels + number_1);
+    //         guesses.add(no_vowels + number_2);
+    //         guesses.add(no_vowels + number_3);
+    //         guesses.add(no_vowels + number_4);
+    //
+    //         guesses.add(number_1 + original);
+    //         guesses.add(number_2 + original);
+    //         guesses.add(number_3 + original);
+    //         guesses.add(number_4 + original);
+    //
+    //         guesses.add(number_1 + reverse);
+    //         guesses.add(number_2 + reverse);
+    //         guesses.add(number_3 + reverse);
+    //         guesses.add(number_4 + reverse);
+    //
+    //         guesses.add(number_1 + no_vowels);
+    //         guesses.add(number_2 + no_vowels);
+    //         guesses.add(number_3 + no_vowels);
+    //         guesses.add(number_4 + no_vowels);
+    //         // String original_num = original + number;
+    //         // String reverse_num = reverse + number;
+    //         // String no_vowels_num = no_vowels + number;
+    //         // guesses.add(original_num);
+    //         // guesses.add(reverse_num);
+    //         // guesses.add(no_vowels_num);
+    //       }
+    //     }
+    //   }
+    // }
     for(int i = 0; i < special.length; i++){
       guesses.add(original + special[i]);
       guesses.add(reverse + special[i]);
@@ -270,17 +269,18 @@ public class Password {
 
         Password p = new Password(username, salt, iterations, hashed);
         passwords.add(p);
+        guesses.add(p.username);
       }
 
-      filename = "words.txt";
-      line = "";
       // Read in dictionary file
+      filename = "guesses.txt";
+      System.out.println("Reading guesses from: " + filename);
+      line = "";
       reader = new FileReader(filename);
       buff = new BufferedReader(reader);
-      int count = 0;
       while((line = buff.readLine()) != null){
-        count++;
-        String original = line;
+        String original = line.trim();
+        System.out.println("Word to check: " +  original);
         String reverse = new StringBuffer(line).reverse().toString();
         String no_vowels = line.replaceAll("[AEIOUaeiou]", "");
         guesses.add(original);
@@ -289,13 +289,13 @@ public class Password {
 
         buildNumbersAndSpecial(guesses);
         changeCase(guesses);
-        System.out.println("Number of guesses is: " + guesses.size());
 
         attack(passwords, guesses);
-        System.out.println("Moving on to next word");
+        guesses.clear();
+        System.out.println("Moving on to next word\n");
       } //line for
       for(Password p : passwords){
-        System.out.println(p.username + "::" + p.plainText);
+        System.out.println(p.getUsername() + "::" + p.getPlainText());
       }
     }catch(FileNotFoundException e){
       System.out.println("Couldn't find file. Please make sure it is in the current directory");
