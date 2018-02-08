@@ -79,12 +79,6 @@ public class Password {
     } // Password for
   }
 
-  public static void changeCase(LinkedList<String> guesses){
-    guesses.add(guesses.get(0).toUpperCase());
-    guesses.add(guesses.get(1).toUpperCase());
-    guesses.add(guesses.get(2).toUpperCase());
-  }
-
   public static void buildNumbersAndSpecial(LinkedList<String> guesses){
     int[] numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     String[] special = {"!", "#", "$", "%", "^", "&", "*", "(", ")", ":", ";", ".", ",", "/", "?", "\\", "{", "|", "}", "`", "~", "@", "<", ">", "[", "]", "+", "-", "_", "="};
@@ -93,54 +87,54 @@ public class Password {
     String reverse = guesses.get(1);
     String no_vowels = guesses.get(2);
 
-    // for(int i = 0; i < numbers.length; i++){
-    //   for(int j = 0; j < numbers.length; j++){
-    //     for(int a = 0; a < numbers.length; a++){
-    //       for(int b = 0; b < numbers.length; b++){
-    //         String number_1 = Integer.toString(numbers[i]);
-    //         String number_2 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]);
-    //         String number_3 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]);
-    //         String number_4 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]) + Integer.toString(numbers[b]);
-    //
-    //         guesses.add(original + number_1);
-    //         guesses.add(original + number_2);
-    //         guesses.add(original + number_3);
-    //         guesses.add(original + number_4);
-    //
-    //         guesses.add(reverse + number_1);
-    //         guesses.add(reverse + number_2);
-    //         guesses.add(reverse + number_3);
-    //         guesses.add(reverse + number_4);
-    //
-    //         guesses.add(no_vowels + number_1);
-    //         guesses.add(no_vowels + number_2);
-    //         guesses.add(no_vowels + number_3);
-    //         guesses.add(no_vowels + number_4);
-    //
-    //         guesses.add(number_1 + original);
-    //         guesses.add(number_2 + original);
-    //         guesses.add(number_3 + original);
-    //         guesses.add(number_4 + original);
-    //
-    //         guesses.add(number_1 + reverse);
-    //         guesses.add(number_2 + reverse);
-    //         guesses.add(number_3 + reverse);
-    //         guesses.add(number_4 + reverse);
-    //
-    //         guesses.add(number_1 + no_vowels);
-    //         guesses.add(number_2 + no_vowels);
-    //         guesses.add(number_3 + no_vowels);
-    //         guesses.add(number_4 + no_vowels);
-    //         // String original_num = original + number;
-    //         // String reverse_num = reverse + number;
-    //         // String no_vowels_num = no_vowels + number;
-    //         // guesses.add(original_num);
-    //         // guesses.add(reverse_num);
-    //         // guesses.add(no_vowels_num);
-    //       }
-    //     }
-    //   }
-    // }
+    for(int i = 0; i < numbers.length; i++){
+      for(int j = 0; j < numbers.length; j++){
+        // for(int a = 0; a < numbers.length; a++){
+          // for(int b = 0; b < numbers.length; b++){
+            String number_1 = Integer.toString(numbers[i]);
+            String number_2 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]);
+            // String number_3 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]);
+            // String number_4 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]) + Integer.toString(numbers[b]);
+
+            guesses.add(original + number_1);
+            guesses.add(original + number_2);
+            // guesses.add(original + number_3);
+            // guesses.add(original + number_4);
+
+            guesses.add(reverse + number_1);
+            guesses.add(reverse + number_2);
+            // guesses.add(reverse + number_3);
+            // guesses.add(reverse + number_4);
+
+            guesses.add(no_vowels + number_1);
+            guesses.add(no_vowels + number_2);
+            // guesses.add(no_vowels + number_3);
+            // guesses.add(no_vowels + number_4);
+
+            guesses.add(number_1 + original);
+            guesses.add(number_2 + original);
+            // guesses.add(number_3 + original);
+            // guesses.add(number_4 + original);
+
+            guesses.add(number_1 + reverse);
+            guesses.add(number_2 + reverse);
+            // guesses.add(number_3 + reverse);
+            // guesses.add(number_4 + reverse);
+
+            guesses.add(number_1 + no_vowels);
+            guesses.add(number_2 + no_vowels);
+            // guesses.add(number_3 + no_vowels);
+            // guesses.add(number_4 + no_vowels);
+            // String original_num = original + number;
+            // String reverse_num = reverse + number;
+            // String no_vowels_num = no_vowels + number;
+            // guesses.add(original_num);
+            // guesses.add(reverse_num);
+            // guesses.add(no_vowels_num);
+          // }
+        // }
+      }
+    }
     for(int i = 0; i < special.length; i++){
       guesses.add(original + special[i]);
       guesses.add(reverse + special[i]);
@@ -269,30 +263,52 @@ public class Password {
 
         Password p = new Password(username, salt, iterations, hashed);
         passwords.add(p);
-        guesses.add(p.username);
+        guesses.add(p.getUsername());
+        guesses.add(p.getUsername().toUpperCase());
+        guesses.add(new StringBuilder(p.getUsername()).reverse().toString());
+        guesses.add(new StringBuilder(p.getUsername()).reverse().toString().toUpperCase());
+
       }
 
       // Read in dictionary file
-      filename = "guesses.txt";
-      System.out.println("Reading guesses from: " + filename);
+      // filename = "guesses.txt";
+      filename = "10million.txt";
+
       line = "";
       reader = new FileReader(filename);
       buff = new BufferedReader(reader);
       while((line = buff.readLine()) != null){
-        String original = line.trim();
+        String original = line.split("\\s+")[0];
         System.out.println("Word to check: " +  original);
-        String reverse = new StringBuffer(line).reverse().toString();
-        String no_vowels = line.replaceAll("[AEIOUaeiou]", "");
+        String reverse = new StringBuffer(original).reverse().toString();
+        String no_vowels = original.replaceAll("[AEIOUaeiou]", "");
         guesses.add(original);
         guesses.add(reverse);
         guesses.add(no_vowels);
 
-        buildNumbersAndSpecial(guesses);
-        changeCase(guesses);
+        // buildNumbersAndSpecial(guesses);
 
         attack(passwords, guesses);
         guesses.clear();
-        System.out.println("Moving on to next word\n");
+
+        if(line.split("\\s+").length > 1){
+          original = line.split("\\s+")[1];
+          System.out.println("Word to check: " +  original);
+          reverse = new StringBuffer(original).reverse().toString();
+          no_vowels = original.replaceAll("[AEIOUaeiou]", "");
+          guesses.add(original);
+          guesses.add(reverse);
+          guesses.add(no_vowels);
+          
+          // buildNumbersAndSpecial(guesses);
+
+          attack(passwords, guesses);
+          guesses.clear();
+        }
+
+
+
+
       } //line for
       for(Password p : passwords){
         System.out.println(p.getUsername() + "::" + p.getPlainText());

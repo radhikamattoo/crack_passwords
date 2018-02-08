@@ -10,6 +10,6 @@ https://github.com/berzerk0/Probable-Wordlists/blob/master/Real-Passwords/Top95T
 
 Compiling/Running:
 1. Download the above txt file of common passwords, and place it in the same directory as the .java file.
-2. Rename the txt file "guesses.txt"
+2. Name the txt file "guesses.txt"
 3. Run javac Password.java
 4. Run java Password
