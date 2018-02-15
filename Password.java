@@ -1,4 +1,3 @@
-//
 /*
  * Name: Radhika Mattoo
  * Description: Task 2, Password Cracking Program
@@ -58,6 +57,42 @@ public class Password {
     return p;
   }
 
+  public static void mixCases(LinkedList<String> guesses) {
+      String[] guess_array = guesses.toArray(new String[guesses.size()]);
+      for(int i = 0; i < guess_array.length; i++){
+        String s = guess_array[i];
+        StringBuilder result = new StringBuilder(s);
+        int idx = 0;
+        boolean toUpper = true;
+        for (char c : s.toCharArray()) {
+            if (Character.isLetter(c)) {
+                if (toUpper) {
+                    c = Character.toUpperCase(c);
+                }
+                toUpper = !toUpper;
+            }
+            result.setCharAt(idx, c);
+            idx++;
+        } //char for loop
+        guesses.add(result.toString());
+
+        result = new StringBuilder(s);
+        idx = 0;
+        toUpper = false;
+        for (char c : s.toCharArray()) {
+            if (Character.isLetter(c)) {
+                if (toUpper) {
+                    c = Character.toUpperCase(c);
+                }
+                toUpper = !toUpper;
+            }
+            result.setCharAt(idx, c);
+            idx++;
+        } //char for loop
+        guesses.add(result.toString());
+      } //guesses for loop
+  }
+
   public static void attack(LinkedList<Password> passwords, LinkedList<String> guesses){
     final int iterations = 1;
     final int keyLength = 256;
@@ -83,147 +118,149 @@ public class Password {
     int[] numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     String[] special = {"!", "#", "$", "%", "^", "&", "*", "(", ")", ":", ";", ".", ",", "/", "?", "\\", "{", "|", "}", "`", "~", "@", "<", ">", "[", "]", "+", "-", "_", "="};
 
-    String original = guesses.get(0);
-    String reverse = guesses.get(1);
-    String no_vowels = guesses.get(2);
+    String[] guess_array = guesses.toArray(new String[guesses.size()]);
+    for(int g = 0; g < guess_array.length; g++){
+      String guess = guess_array[g];
+      int length = guess.length();
 
-    for(int i = 0; i < numbers.length; i++){
-      for(int j = 0; j < numbers.length; j++){
-        // for(int a = 0; a < numbers.length; a++){
-          // for(int b = 0; b < numbers.length; b++){
-            String number_1 = Integer.toString(numbers[i]);
-            String number_2 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]);
-            // String number_3 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]);
-            // String number_4 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]) +  Integer.toString(numbers[a]) + Integer.toString(numbers[b]);
-
-            guesses.add(original + number_1);
-            guesses.add(original + number_2);
-            // guesses.add(original + number_3);
-            // guesses.add(original + number_4);
-
-            guesses.add(reverse + number_1);
-            guesses.add(reverse + number_2);
-            // guesses.add(reverse + number_3);
-            // guesses.add(reverse + number_4);
-
-            guesses.add(no_vowels + number_1);
-            guesses.add(no_vowels + number_2);
-            // guesses.add(no_vowels + number_3);
-            // guesses.add(no_vowels + number_4);
-
-            guesses.add(number_1 + original);
-            guesses.add(number_2 + original);
-            // guesses.add(number_3 + original);
-            // guesses.add(number_4 + original);
-
-            guesses.add(number_1 + reverse);
-            guesses.add(number_2 + reverse);
-            // guesses.add(number_3 + reverse);
-            // guesses.add(number_4 + reverse);
-
-            guesses.add(number_1 + no_vowels);
-            guesses.add(number_2 + no_vowels);
-            // guesses.add(number_3 + no_vowels);
-            // guesses.add(number_4 + no_vowels);
-            // String original_num = original + number;
-            // String reverse_num = reverse + number;
-            // String no_vowels_num = no_vowels + number;
-            // guesses.add(original_num);
-            // guesses.add(reverse_num);
-            // guesses.add(no_vowels_num);
-          // }
-        // }
+      for(int i = 0; i < numbers.length; i++){
+        for(int j = 0; j < numbers.length; j++){
+          String number_1 = Integer.toString(numbers[i]);
+          String number_2 = Integer.toString(numbers[i]) + Integer.toString(numbers[j]);
+          guesses.add(guess + number_1);
+          guesses.add(guess + number_2);
+          guesses.add(guess + number_1 + number_2);
+        }
       }
+      // replace s with $
+      String original_s = guess.replace("s", "$");
+      guesses.add(original_s);
+      original_s = guess.replace("S", "$");
+      guesses.add(original_s);
+
+      // replace a with @
+      String original_a = guess.replace("a", "@");
+      guesses.add(original_a);
+      original_a = guess.replace("A", "@");
+      guesses.add(original_a);
+
+      // replace b with 8
+      String original_b = guess.replace("b", "8");
+      guesses.add(original_b);
+      original_b = guess.replace("B", "8");
+      guesses.add(original_b);
+
+      //replace c with (
+      String original_c = guess.replace("c", "(");
+      guesses.add(original_c);
+      original_c = guess.replace("C", "(");
+      guesses.add(original_c);
+
+      //replace d with 6
+      String original_d = guess.replace("d", "6");
+      guesses.add(original_d);
+      original_d = guess.replace("D", "8");
+      guesses.add(original_d);
+
+      //replace e with 3
+      String original_e = guess.replace("e", "3");
+      guesses.add(original_e);
+      original_e = guess.replace("E", "3");
+      guesses.add(original_e);
+
+      //replace h with #
+      String original_h = guess.replace("h", "#");
+      guesses.add(original_h);
+      original_h = guess.replace("H", "#");
+      guesses.add(original_h);
+
+      //replace o with 0
+      String original_o = guess.replace("o", "0");
+      guesses.add(original_o);
+      original_o = guess.replace("O", "0");
+      guesses.add(original_o);
+
+      //replace t with +
+      String original_t = guess.replace("t", "+");
+      guesses.add(original_t);
+      original_t = guess.replace("T", "+");
+      guesses.add(original_t);
+
+      //replace f with #
+      String original_f = guess.replace("f", "#");
+      guesses.add(original_f);
+      original_f = guess.replace("F", "#");
+      guesses.add(original_f);
+
+      //replace i with 1
+      String original_i = guess.replace("i", "1");
+      guesses.add(original_i);
+      original_i = guess.replace("I", "1");
+      guesses.add(original_i);
+
+      //replace i with !
+      String original_i_ex = guess.replace("i", "!");
+      guesses.add(original_i_ex);
+      original_i_ex = guess.replace("I", "!");
+      guesses.add(original_i_ex);
+
+      //replace l with 1
+      String original_l = guess.replace("l", "1");
+      guesses.add(original_l);
+      original_l = guess.replace("L", "1");
+      guesses.add(original_l);
+
+      //replace l with 1
+      String original_i_1 = guess.replace("l", "i");
+      guesses.add(original_i_1);
+      original_i_1 = guess.replace("L", "i");
+      guesses.add(original_i_1);
+
+      //replace q with 9
+      String original_q = guess.replace("q", "9");
+      guesses.add(original_q);
+      original_q = guess.replace("Q", "9");
+      guesses.add(original_q);
+
+      //replace s with 5
+      String original_s_5 = guess.replace("s", "5");
+      guesses.add(original_s_5);
+      original_s_5 = guess.replace("S", "5");
+      guesses.add(original_s_5);
+
+      //replace w with uu
+      String original_w = guess.replace("w", "uu");
+      guesses.add(original_w);
+      original_w = guess.replace("W", "uu");
+      guesses.add(original_w);
+
+      //replace x with %
+      String original_x = guess.replace("x", "%");
+      guesses.add(original_x);
+      original_x = guess.replace("X", "%");
+      guesses.add(original_x);
+
+      //replace y with ?
+      String original_y = guess.replace("y", "?");
+      guesses.add(original_y);
+      original_y = guess.replace("Y", "?");
+      guesses.add(original_y);
+
+      // replace everything!
+      String original_super = guess.replace("o", "0").replace("h", "#").replace("e", "3").replace("d", "6").replace("c", "(").replace("b", "8").replace("a", "@").replace("s", "$");
+      guesses.add(original_super);
     }
-    for(int i = 0; i < special.length; i++){
-      guesses.add(original + special[i]);
-      guesses.add(reverse + special[i]);
-      guesses.add(no_vowels + special[i]);
 
-      guesses.add(special[i] + original);
-      guesses.add(special[i] + reverse);
-      guesses.add(special[i] + no_vowels);
-    }
-    // replace s with $
-    String original_s = original.replace("s", "$");
-    String reverse_s = reverse.replace("s", "$");
-    String no_vowel_s = no_vowels.replace("s", "$");
+  }
 
-    guesses.add(original_s);
-    guesses.add(reverse_s);
-    guesses.add(no_vowel_s);
-
-    // replace a with @
-    String original_a = original.replace("a", "@");
-    String reverse_a = reverse.replace("a", "@");
-    String no_vowel_a = no_vowels.replace("a", "@");
-
-    guesses.add(original_a);
-    guesses.add(reverse_a);
-    guesses.add(no_vowel_a);
-
-    // replace b with 8
-    String original_b = original.replace("b", "8");
-    String reverse_b = reverse.replace("b", "8");
-    String no_vowel_b = no_vowels.replace("b", "8");
-
-    guesses.add(original_b);
-    guesses.add(reverse_b);
-    guesses.add(no_vowel_b);
-
-    //replace c with (
-    String original_c = original.replace("c", "(");
-    String reverse_c = reverse.replace("c", "(");
-    String no_vowel_c = no_vowels.replace("c", "(");
-
-    guesses.add(original_c);
-    guesses.add(reverse_c);
-    guesses.add(no_vowel_c);
-
-    //replace d with 6
-    String original_d = original.replace("d", "6");
-    String reverse_d = reverse.replace("d", "6");
-    String no_vowel_d = no_vowels.replace("d", "6");
-
-    guesses.add(original_d);
-    guesses.add(reverse_d);
-    guesses.add(no_vowel_d);
-
-    //replace e with 3
-    String original_e = original.replace("e", "3");
-    String reverse_e = reverse.replace("e", "3");
-    String no_vowel_e = no_vowels.replace("e", "3");
-
-    guesses.add(original_e);
-    guesses.add(reverse_e);
-    guesses.add(no_vowel_e);
-
-    //replace h with #
-    String original_h = original.replace("h", "#");
-    String reverse_h = reverse.replace("h", "#");
-    String no_vowel_h = no_vowels.replace("h", "#");
-
-    guesses.add(original_h);
-    guesses.add(reverse_h);
-    guesses.add(no_vowel_h);
-
-    //replace o with 0
-    String original_o = original.replace("o", "0");
-    String reverse_o = reverse.replace("o", "0");
-    String no_vowel_o = no_vowels.replace("o", "0");
-
-    guesses.add(original_o);
-    guesses.add(reverse_o);
-    guesses.add(no_vowel_o);
-
-    //replace t with +
-    String original_t = original.replace("t", "+");
-    String reverse_t = reverse.replace("t", "+");
-    String no_vowel_t = no_vowels.replace("t", "+");
-
-    guesses.add(original_t);
-    guesses.add(reverse_t);
-    guesses.add(no_vowel_t);
+  public static void permutation(String prefix, String str, LinkedList<String> toAdd) {
+      int n = str.length();
+      if (n == 0) { toAdd.add(prefix); }
+      else {
+          for (int i = 0; i < n; i++){
+              permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i+1, n), toAdd);
+            }
+      }
   }
 
   // Taken from: https://www.owasp.org/index.php/Hashing_Java
@@ -243,10 +280,13 @@ public class Password {
   public static void main(String[] args){
     LinkedList<Password> passwords = new LinkedList<Password>();
     LinkedList<String> guesses = new LinkedList<String>();
+    LinkedList<String> permutations = new LinkedList<String>();
+    LinkedList<String> toAdd = new LinkedList<String>();
 
     String filename = "pswd.txt";
     String line = "";
     try{
+
       // Read in Password objects
       FileReader reader = new FileReader(filename);
       BufferedReader buff = new BufferedReader(reader);
@@ -271,14 +311,15 @@ public class Password {
       }
 
       // Read in dictionary file
-      // filename = "guesses.txt";
-      filename = "10million.txt";
+      filename = "guesses.txt";
+      // filename = "bruteforcedb.txt";
 
       line = "";
       reader = new FileReader(filename);
       buff = new BufferedReader(reader);
+
       while((line = buff.readLine()) != null){
-        String original = line.split("\\s+")[0];
+        String original = line;
         System.out.println("Word to check: " +  original);
         String reverse = new StringBuffer(original).reverse().toString();
         String no_vowels = original.replaceAll("[AEIOUaeiou]", "");
@@ -286,28 +327,34 @@ public class Password {
         guesses.add(reverse);
         guesses.add(no_vowels);
 
-        // buildNumbersAndSpecial(guesses);
+
+        Iterator it = guesses.iterator();
+        while(it.hasNext()){
+          String s = (String)it.next();
+
+          permutation("", s, toAdd);
+
+          Iterator it_add = toAdd.iterator();
+          while(it_add.hasNext()){
+            String perm = (String)it_add.next();
+            if(perm.equals(s)) continue;
+            permutations.add(perm);
+          }
+          toAdd.clear();
+        }
+        System.out.println("\t Finished permutations, building numbers and special characters");
+        // FIXME
+        mixCases(guesses);
+        buildNumbersAndSpecial(guesses);
+
+        System.out.println("\t Guesses size: " + guesses.size());
+        System.out.println("\t Permutations size: " + permutations.size());
+        System.out.println("\t Attacking passwords...");
 
         attack(passwords, guesses);
+        attack(passwords, permutations);
         guesses.clear();
-
-        if(line.split("\\s+").length > 1){
-          original = line.split("\\s+")[1];
-          System.out.println("Word to check: " +  original);
-          reverse = new StringBuffer(original).reverse().toString();
-          no_vowels = original.replaceAll("[AEIOUaeiou]", "");
-          guesses.add(original);
-          guesses.add(reverse);
-          guesses.add(no_vowels);
-          
-          // buildNumbersAndSpecial(guesses);
-
-          attack(passwords, guesses);
-          guesses.clear();
-        }
-
-
-
+        permutations.clear();
 
       } //line for
       for(Password p : passwords){

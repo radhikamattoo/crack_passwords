@@ -8,6 +8,12 @@ I used a list of common passwords from the following github link:
 
 https://github.com/berzerk0/Probable-Wordlists/blob/master/Real-Passwords/Top95Thousand-probable.txt
 
+Permutations: 
+Ideas for permutations came from this wiki page: 
+
+https://en.wikipedia.org/wiki/Munged_password
+
+
 Compiling/Running:
 1. Download the above txt file of common passwords, and place it in the same directory as the .java file.
 2. Name the txt file "guesses.txt"
