@@ -266,8 +266,6 @@ public class Password {
 
       // Read in dictionary file
       filename = "guesses.txt";
-      // filename = "bruteforcedb.txt";
-
       line = "";
       reader = new FileReader(filename);
       buff = new BufferedReader(reader);

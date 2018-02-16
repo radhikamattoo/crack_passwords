@@ -3,19 +3,12 @@ java version "1.8.0_20"
 Java(TM) SE Runtime Environment (build 1.8.0_20-b26)
 Java HotSpot(TM) 64-Bit Server VM (build 25.20-b23, mixed mode)
 
+Compiling/Running:
+3. javac Password.java
+4. java Password
+The program takes about 15 seconds to run before printing out the results. 
+
 Dictionary:
-I used a list of common passwords from the following github link:
+I used a list of common passwords from the following github link, and named the file ‘guesses.txt’ in my program:
 
 https://github.com/berzerk0/Probable-Wordlists/blob/master/Real-Passwords/Top95Thousand-probable.txt
-
-Permutations: 
-Ideas for permutations came from this wiki page: 
-
-https://en.wikipedia.org/wiki/Munged_password
-
-
-Compiling/Running:
-1. Download the above txt file of common passwords, and place it in the same directory as the .java file.
-2. Name the txt file "guesses.txt"
-3. Run javac Password.java
-4. Run java Password
