@@ -57,42 +57,6 @@ public class Password {
     return p;
   }
 
-  public static void mixCases(LinkedList<String> guesses) {
-      String[] guess_array = guesses.toArray(new String[guesses.size()]);
-      for(int i = 0; i < guess_array.length; i++){
-        String s = guess_array[i];
-        StringBuilder result = new StringBuilder(s);
-        int idx = 0;
-        boolean toUpper = true;
-        for (char c : s.toCharArray()) {
-            if (Character.isLetter(c)) {
-                if (toUpper) {
-                    c = Character.toUpperCase(c);
-                }
-                toUpper = !toUpper;
-            }
-            result.setCharAt(idx, c);
-            idx++;
-        } //char for loop
-        guesses.add(result.toString());
-
-        result = new StringBuilder(s);
-        idx = 0;
-        toUpper = false;
-        for (char c : s.toCharArray()) {
-            if (Character.isLetter(c)) {
-                if (toUpper) {
-                    c = Character.toUpperCase(c);
-                }
-                toUpper = !toUpper;
-            }
-            result.setCharAt(idx, c);
-            idx++;
-        } //char for loop
-        guesses.add(result.toString());
-      } //guesses for loop
-  }
-
   public static void attack(LinkedList<Password> passwords, LinkedList<String> guesses){
     final int iterations = 1;
     final int keyLength = 256;
@@ -102,11 +66,11 @@ public class Password {
         char[] guess_char = guess.toCharArray();
         String encoded = Base64.getEncoder().encodeToString(hashPassword(guess_char, p.getSalt(), iterations, keyLength));
         if(p.getHashed().equals(encoded)){
-          System.out.println("CRACKED PASSWORD FOR " + p.getUsername());
-          System.out.println("Password:" + guess);
-          System.out.println("Password length: " + guess.length());
-          System.out.println("Original encryption: " + p.getHashed());
-          System.out.println("Guess encryption: " + encoded );
+          // System.out.println("CRACKED PASSWORD FOR " + p.getUsername());
+          // System.out.println("Password:" + guess);
+          // System.out.println("Password length: " + guess.length());
+          // System.out.println("Original encryption: " + p.getHashed());
+          // System.out.println("Guess encryption: " + encoded );
           p.setPlainText(guess);
           break;
         }
@@ -253,16 +217,6 @@ public class Password {
 
   }
 
-  public static void permutation(String prefix, String str, LinkedList<String> toAdd) {
-      int n = str.length();
-      if (n == 0) { toAdd.add(prefix); }
-      else {
-          for (int i = 0; i < n; i++){
-              permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i+1, n), toAdd);
-            }
-      }
-  }
-
   // Taken from: https://www.owasp.org/index.php/Hashing_Java
   public static byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength ) {
     try {
@@ -278,10 +232,10 @@ public class Password {
   }
 
   public static void main(String[] args){
+    long start = System.nanoTime();
     LinkedList<Password> passwords = new LinkedList<Password>();
     LinkedList<String> guesses = new LinkedList<String>();
     LinkedList<String> permutations = new LinkedList<String>();
-    LinkedList<String> toAdd = new LinkedList<String>();
 
     String filename = "pswd.txt";
     String line = "";
@@ -317,49 +271,25 @@ public class Password {
       line = "";
       reader = new FileReader(filename);
       buff = new BufferedReader(reader);
-
       while((line = buff.readLine()) != null){
         String original = line;
-        System.out.println("Word to check: " +  original);
+        // System.out.println("Word to check: " +  original);
         String reverse = new StringBuffer(original).reverse().toString();
         String no_vowels = original.replaceAll("[AEIOUaeiou]", "");
         guesses.add(original);
         guesses.add(reverse);
         guesses.add(no_vowels);
 
-
-        Iterator it = guesses.iterator();
-        while(it.hasNext()){
-          String s = (String)it.next();
-
-          permutation("", s, toAdd);
-
-          Iterator it_add = toAdd.iterator();
-          while(it_add.hasNext()){
-            String perm = (String)it_add.next();
-            if(perm.equals(s)) continue;
-            permutations.add(perm);
-          }
-          toAdd.clear();
-        }
-        System.out.println("\t Finished permutations, building numbers and special characters");
-        // FIXME
-        mixCases(guesses);
-        buildNumbersAndSpecial(guesses);
-
-        System.out.println("\t Guesses size: " + guesses.size());
-        System.out.println("\t Permutations size: " + permutations.size());
-        System.out.println("\t Attacking passwords...");
-
         attack(passwords, guesses);
-        attack(passwords, permutations);
         guesses.clear();
-        permutations.clear();
 
       } //line for
+      long elapsedTime = (System.nanoTime() - start);
+      float seconds = (elapsedTime/1000F) % 60;
       for(Password p : passwords){
         System.out.println(p.getUsername() + "::" + p.getPlainText());
       }
+      // System.out.println("This program took " + seconds + " seconds to run.");
     }catch(FileNotFoundException e){
       System.out.println("Couldn't find file. Please make sure it is in the current directory");
     }catch(IOException e){
